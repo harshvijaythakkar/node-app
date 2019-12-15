@@ -1,0 +1,22 @@
+version: 0.2
+
+
+phases:
+  pre_build:
+    commands:
+      - REPOSITORY_URI=harshthakkar/nodeapp
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest .
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest
+      - echo Writing image definitions file...
+      - printf '[{"name":"nodeapp","imageUri":"%s"}]' $REPOSITORY_URI:latest > imagedefinitions.json
+      - cat imagedefinitions.json 
+artifacts:
+    files: imagedefinitions.json
